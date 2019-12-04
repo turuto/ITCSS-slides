@@ -1,4 +1,4 @@
-# ITCSS slides [![Build Status]
+# ITCSS slides
 
 Las slides de la formación sobre Buenas prácticas, metodología, nomencalturas CSS y arquitectura ITCSS
 
