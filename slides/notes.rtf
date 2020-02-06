@@ -1,0 +1,271 @@
+preguntar si han oido, y si saben que significa
+
+esta parte no va de lo mucho vocabulario que va dentro de las llaves del css, sino que se enfoca en lo de fuera.
+
+Arquitectura CSS se basa en el trabajo de  Harry roberts ITCSS, Snook (SMACCS) Brad Frost (atomics design), Giraudel (7 folders)
+ITCSS es Inverted Triangle CSS
+Arquitectura sana, mantenible, escalable. Modular, encapsaulada y predecible
+
+no es un template, ni un framework, ni un conjunto de componentes
+es una filosofía, 
+es un metaframework, es una manera de afrontar proyectos. agnostico de otros componentes o framewroks prepros, etc
+
+ITCSS es una solución más a la especficidad
+Organizar las hojas de estilos pensando en el navegador.
+esto es ventajas a nivel de performance
+la desventaja es que con BEM es un poquito coñazo de escribir
+es una capa de abstracción jerarquica sobre el OOCSS
+
+
+Hay muchas maneras de impementarlo (ver slide del triangulo invertido)
+
+La claridad es la abstraccion en la semantica e impacto del selector. A medida que bajamos en la capa, el nombre del selector queda más claro a que se refiere
+
+
+
+Esta orientado a reducir la especficidad de los selectores y a hacer que la performance del CSS sea mucho mejor. Hay que buscar la manera de adaptarlo a tu proyecto.
+hay elementos muy costosos a la performanc, los comodinies *
+
+Es aplciable a todo tipo de proyecto. Se puede tener una estructura vacía deonde ya tenemos los  mixins, tools, reset, etc y vamos
+
+Tener una metodolgía hace que sea bueno ya no solo para un proyecto, sino que cuando alquien se incorpora al proyecto, le va a ser muy familiar.
+
+
+
+ FOLDERS
+
+ Ni a Dani fornells ni a mi nos gusta que las carpetas se llamen a saco con su nombre ya que al ordenarse alfabeticamente luego no sabes el orden de las capas, de ahí que le meta el num en el nombre
+ 01.-SETTIINGS
+    variables, tokens y configuraciones varias
+    a) Configuración del nucleo:
+         root font size
+         espaciados
+    b) variables
+         Tipos
+         colores
+         brakpoints
+
+
+ 02.-TOOLS
+  mixins y fiunciones
+  a) Funciones globales
+      conversion de unidades
+      ...
+   b) Mixins globales:
+      media queries
+      ratios
+      clearfix
+
+ 03.-GENERIC
+ reset.css, normalice, etc lo que afecta a todo el site
+   Normalización
+   MNodelo de caja (border-box, etc)
+   Inicialización del comportamiento
+   Espaciado y el ritmo vertical de algunos elementos
+
+ 04.-ELEMENTS
+ los selectores de tags a pelo
+      si las img tienen min-width del 100%, si los li le quitamos el bullet, etc.
+      El color de los enlaces
+      la seleccion
+
+
+ 05.-OBJECTS  (2)
+ clases para layout y estrructura, sieguiendo un poco el OOCSS, no cosmético
+ Ver ejemplo del media object de nicol e sullivan
+      Patrones repetibles de diseño
+      Propiedaedes que tratas estñan asociadoas a la distribución y al modelos de cajas
+      Heredables por los componentes
+      No cosmética
+
+Son patrones d diseño reusables. Hablamos de las propiedades:
+     display, positioning, float, flexbox, css Giraudel
+     margin y padding
+     alignment y direction
+     width y ratios
+     clearfix
+
+     Como el modelo de caja afecta a otras cajas
+     nunca es cosmetico
+
+     Objeto box 
+     Objeto media (los modificadores son solo el margen entre la img y el body)
+     Objecto pack: Hoy se hace memjor con flexbox
+     Objeto layout: es como un grid de bootstrap
+
+     Conmuta y reduce 44:59
+
+
+ 055.-ANIMATION 
+ (movimientos y transiciones reusables)
+
+ 06.-COMPONENTS ( o lo que quieras) (3)
+ el grueso. Se basa en el atomic design  Tanto este como el otro vamos a hacer mucho uso del BEM
+      Copmponentes visuales reusables
+      Su semántica esta asociada a su apariencia, no a su fiunción ni a su contenido.  No deberían llamarse boton-noticias, sino boton-primary, porque el boton noticias puedes acabar usandolo en otras partes
+      Con o sin jerarquía entre ellos
+
+      por ejemplo un boton
+
+      Dani fornells tokeniza en cada componente sus variables, que apuntan a las de settings
+
+Los principios de los componentes:
+     Aislamiento
+     Reusabiidad
+     Flexibilidad
+     Agnosticos del contenido
+
+Nos referimos a cosas muy cosméticas: colors y borders, tipografia, formularios, box model properties de los hijos
+
+Una variación de iun componente es aquella mutación que no va a cambiar durante la vida de la página. Usa modificviadores solo al nivel root del componente
+
+Los estados de los componentes, (a diferencia de la bvariación) es aquel comportamineto susceptibñe de ser cambiado durante la vida de la página o interacción del usuario. Para ello se usan variables de estados
+.is disabled{
+     &.btn {
+          ...
+     }
+}
+ejemplos, is-disabled, is-active, is-visited
+Los componentes, en el html se combinan con el uso de objetos. Se usan los objetos para envolver tu componente y distirbuirlo en la pagina
+<div class="o-media">
+     <div class="o-media__img></div>
+     <div class="o-media__body c-card>
+          <h3 class="c-card__title"> </<h3>
+     </div>
+</div>
+
+Los elementos del componente ya se maquetan dentro del componente, en lugar de usar obejtos 
+
+
+07.-SCOPES
+Cosas de otros componetntes o librerias que estamos usadno. El tinycss por ejemplo.
+
+Caaja negra que te saca de apuros
+ 08.-THEMING
+
+ 09.-UTILITIES/TRUMPS/WINS (1)
+ Estilos más especificos. Permite usar important. Utilidades son cosas que si o si quremos. Los estados.También inlcuimos el shame.css y cosas poco elegantes. son elementos de responsabilidad unica, clases que hacen solo una cosa
+      Las utilities:
+      Diseñadas para las excepciones, no para reutilizarlas
+      UNa sola propiedad !important
+Por ejemplo, es cuando te viene alguien a decir, esto se que no es así, pero me gustaria que aqui tuviera un margen doble
+     Princpio de unica responsabilidad
+     Princpipio de inmutabilidad
+     Solo una regla por utilidad 
+     
+.u-color-primary{
+     color:var(--color-primary);
+}
+Pueden llevar important y vamos a intentar aplicarlos solo a las excepciones, pero que no nos sirva para enmascarar una clases atomicas
+<div class="u-mb u-pt10 u-p-small"></div>
+
+por ejemplo, alineaciones, colores, anchuras (layout pre flexbox)
+Pueden generarse facilmente con bucles de sass y acabar escupiendo mucho css: consejo: usa solo lo que necesites 
+          Variables de conmutación: 32:59
+          $u-color__colors--enabled:true !default;
+          if ($u-color__colors--enabled){
+               ...
+          }
+La diapo 33:35 de reducir los mapas, importante al tokenizar en el contexto, puedes tener todo el settings, lo que pasa es que al usar las custom properties ya la cosa no es tan guay
+
+Agrupar las media queries ayuda al navegador
+
+las utlidades nos permiten hacer todo lo que no se debe hacer, así que es vustra carta secreta
+shame.scss es la deuda tecnica
+Yo meto al final el debug.scss y el lint
+
+Se puede tener un archivo de setup donde se van poniendo en true o comentando lo que haga falta
+Ver el tema de los namespacess
+
+
+En el grafico vemos como las dos primeras carpetas no tienen output css. 
+
+En primeras carpetas afectamos a muchos elementos, y en los úlimos afectamos a muy pocos elementos.
+
+Importante usar namespaces
+
+LAs mediaqueries podrían ser una capa posterior a los componentes, pero lo normal es ponerlo en su propio componentes
+
+ESPCIFICIDAD: EXPLICAR
+a.b.c.d
+
+a: estilos inline y el !important
+b: Ids
+c: clases, atributos y pseudoclases
+d: elementos y pesudolelementos
+
+> + * ñ not()  @media no suman especificidad
+
+la especifidad no suma: 10 clases no ganan a un id
+ 0 0 1 0 > 0 0 1 3
+
+el !important se lo salta
+
+el truco de repetir la misma clase. #{&}#{&}#{&}
+
+ El css funciona de derecha a izquierda
+otro truco de usar id como atributo [#miID]
+
+en caso de empate, el último en llegar GANA
+
+aprovecharse de la cascada
+
+decir que pasa que algo .special.red no necesariamente es rojo si en el css esta escrito antes. de ahí que las utilities vayan al final. y tb hay que saber escribirlas en el html
+
+ no matar moscas a cañonazos y siempre ganar con lo minimo, como en el tute
+
+ El objetivo es mantener la especificidad lo más bajo posible. Ver slide de grafico
+specificity grpah generator (hay un articulo de harry roberts)
+
+
+
+ las vetajas de la mejor cuesta y el maximo es menor ya que nunca hay que andar pisando de manera descontrolada
+
+ CSS STATS donde se ven estadisticas de uso y frikadas varias. 
+
+
+ Puede ser que hay cosas que no funcionan del todo y hay que adaptarlos
+
+ Los nombres no van de  lo que dice el componente, sino de lo que es en sí.
+
+
+ 
+ITCSS+BEM=BEMIT
+block__elemento--modificador
+
+PREFIJOS
+.card {}
+.card__header{}
+.card--xmas{}
+
+.card--xmas .card__header{}
+
+.main-nav__item{}
+
+BEMIT añade los namespaces: ayudan a identificar la capa
+.c-card {}
+.c-card__header{}
+.c-card--xmas{}
+
+.o-media{}
+.o-media__img{}
+.o-media__body{}
+
+.u-margin2x{}
+.u-hidden{}
+
+
+.s-color-primary: red;
+
+SUFIJOS (yo no lo hago)
+Se usan para los breakpoints
+.u-visible\@md{}
+.u-visible\@lg{}
+.u-visible\@xl{}
+
+EL html queda feo, 
+
+POR DONDE EMPEZAR
+Se puede ver en  inuit.css o haiti.css
+
+inuit está en desarrollo, no está documentado, pero los objetos están breakpoints
